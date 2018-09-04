@@ -34,8 +34,10 @@ def prepare_data(f):
 					element = (.0 if tmp[store_format_code] == 'X' else 1.)
 					# print("{}, {}".format(j, element))
 				elif j == product_sub_group_code:
-					element = product_code_to_int(tmp[product_sub_group_code])
+					# element = product_code_to_int(tmp[product_sub_group_code])
+					# discard categorical values
 					# print("{}, {}".format(j, element))
+					element = .0
 				elif j == calendar_date or j == step_indicator or j == offer_number or j == unuse_indicator:
 					element = .0
 				elif not element:
@@ -70,14 +72,20 @@ data = prepare_data(f)
 # 	print(data.shape)
 # 	data = np.concatenate((data, res), axis=0)
 
-print("min: {}".format(data.min(axis=0)))
-print("max: {}".format(data.max(axis=0)))
+# print("min: {}".format(data.min(axis=0)))
+# print("max: {}".format(data.max(axis=0)))
 
 pca = PCA()
 pca.fit(data)
 
 plt.bar([i for i in range(len(pca.explained_variance_ratio_))], pca.explained_variance_ratio_)
 
-plt.show()
-	
-cumul = [pca.explained_variance_ratio_[0]]
+plt.savefig('../plots/pca_variances.pdf')
+
+cum = [pca.explained_variance_ratio_[0]]
+for i in range(1, len(pca.explained_variance_ratio_)):
+	cum.append(cum[i-1] + pca.explained_variance_ratio_[i])
+
+plt.plot(cum)
+
+plt.savefig('../plots/pca_cumulative_variances.pdf')
