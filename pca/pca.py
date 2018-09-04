@@ -82,6 +82,8 @@ plt.bar([i for i in range(len(pca.explained_variance_ratio_))], pca.explained_va
 
 plt.savefig('../plots/pca_variances.pdf')
 
+plt.clf()
+
 cum = [pca.explained_variance_ratio_[0]]
 for i in range(1, len(pca.explained_variance_ratio_)):
 	cum.append(cum[i-1] + pca.explained_variance_ratio_[i])
@@ -89,3 +91,5 @@ for i in range(1, len(pca.explained_variance_ratio_)):
 plt.plot(cum)
 
 plt.savefig('../plots/pca_cumulative_variances.pdf')
+
+plt.clf()
